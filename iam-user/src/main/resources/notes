@@ -1,0 +1,343 @@
+1. create tables:
+
+	Hibernate:
+
+		create table phone (
+		   id integer not null auto_increment,
+			phone_number varchar(255),
+			primary key (id)
+		) engine=InnoDB
+	Hibernate:
+
+		create table profiles (
+		   id integer not null auto_increment,
+			profile_type varchar(255),
+			permissions varchar(255),
+			user_id integer,
+			primary key (id)
+		) engine=InnoDB
+	Hibernate:
+
+		create table users (
+		   id integer not null auto_increment,
+			address varchar(255) not null,
+			email varchar(255) not null,
+			first_name varchar(255) not null,
+			last_name varchar(255) not null,
+			phone_id integer,
+			primary key (id)
+		) engine=InnoDB
+	Hibernate:
+
+		alter table users
+		   drop index UK_6dotkott2kjsp8vw4d0m25fb7
+	Hibernate:
+
+		alter table users
+		   add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email)
+	Hibernate:
+
+		alter table profiles
+		   add constraint FK410q61iev7klncmpqfuo85ivh
+		   foreign key (user_id)
+		   references users (id)
+	Hibernate:
+
+		alter table users
+		   add constraint FKlq0cckks2hmmyc1mk9g30h44
+		   foreign key (phone_id)
+		   references phone (id)
+
+
+2. Create user:
+	Hibernate:
+		insert
+		into
+			phone
+			(phone_number)
+		values
+			(?)
+	2023-04-20T16:28:15.095+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [VARCHAR] - [9632125720]
+	Hibernate:
+		insert
+		into
+			users
+			(address, email, first_name, last_name, phone_id)
+		values
+			(?, ?, ?, ?, ?)
+	2023-04-20T16:28:15.116+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [VARCHAR] - [ICC]
+	2023-04-20T16:28:15.116+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [2] as [VARCHAR] - [yuvraj@icc.com]
+	2023-04-20T16:28:15.116+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [3] as [VARCHAR] - [Yuvraj]
+	2023-04-20T16:28:15.117+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [4] as [VARCHAR] - [Singh]
+	2023-04-20T16:28:15.117+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [5] as [INTEGER] - [1]
+	Hibernate:
+		insert
+		into
+			profiles
+			(profile_type, permissions, user_id)
+		values
+			(?, ?, ?)
+	2023-04-20T16:28:15.123+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [VARCHAR] - [Cool]
+	2023-04-20T16:28:15.123+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [2] as [VARCHAR] - [cool Mode]
+	2023-04-20T16:28:15.123+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [3] as [INTEGER] - [1]
+	Hibernate:
+		insert
+		into
+			profiles
+			(profile_type, permissions, user_id)
+		values
+			(?, ?, ?)
+	2023-04-20T16:28:15.127+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [VARCHAR] - [Fun]
+	2023-04-20T16:28:15.128+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [2] as [VARCHAR] - [Fun Boss]
+	2023-04-20T16:28:15.128+05:30 TRACE 5088 --- [nio-8080-exec-2] org.hibernate.orm.jdbc.bind              : binding parameter [3] as [INTEGER] - [1]
+
+
+
+
+3. Query User by Id
+	Hibernate:
+		select
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			p1_0.id,
+			p1_0.phone_number,
+			p2_0.user_id,
+			p2_0.id,
+			p2_0.profile_type,
+			p2_0.permissions
+		from
+			users u1_0
+		left join
+			phone p1_0
+				on p1_0.id=u1_0.phone_id
+		left join
+			profiles p2_0
+				on u1_0.id=p2_0.user_id
+		where
+			u1_0.id=?
+	2023-04-20T16:28:49.898+05:30 TRACE 5088 --- [nio-8080-exec-3] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+
+4. Get user by email id
+	Hibernate:
+		select
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			u1_0.phone_id
+		from
+			users u1_0
+		where
+			u1_0.email=?
+	2023-04-20T16:29:14.714+05:30 TRACE 5088 --- [nio-8080-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [VARCHAR] - [yuvraj@icc.com]
+	Hibernate:
+		select
+			p1_0.id,
+			p1_0.phone_number,
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			p2_0.user_id,
+			p2_0.id,
+			p2_0.profile_type,
+			p2_0.permissions
+		from
+			phone p1_0
+		left join
+			users u1_0
+				on p1_0.id=u1_0.phone_id
+		left join
+			profiles p2_0
+				on u1_0.id=p2_0.user_id
+		where
+			p1_0.id=?
+	2023-04-20T16:29:14.716+05:30 TRACE 5088 --- [nio-8080-exec-5] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+
+
+
+5. Get all users:
+	Hibernate:
+		select
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			u1_0.phone_id
+		from
+			users u1_0
+	Hibernate:
+		select
+			p1_0.id,
+			p1_0.phone_number,
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			p2_0.user_id,
+			p2_0.id,
+			p2_0.profile_type,
+			p2_0.permissions
+		from
+			phone p1_0
+		left join
+			users u1_0
+				on p1_0.id=u1_0.phone_id
+		left join
+			profiles p2_0
+				on u1_0.id=p2_0.user_id
+		where
+			p1_0.id=?
+	2023-04-20T16:29:49.951+05:30 TRACE 5088 --- [nio-8080-exec-6] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+
+
+6. Update user by id
+	Hibernate:
+		select
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			p1_0.id,
+			p1_0.phone_number,
+			p2_0.user_id,
+			p2_0.id,
+			p2_0.profile_type,
+			p2_0.permissions
+		from
+			users u1_0
+		left join
+			phone p1_0
+				on p1_0.id=u1_0.phone_id
+		left join
+			profiles p2_0
+				on u1_0.id=p2_0.user_id
+		where
+			u1_0.id=?
+	2023-04-20T16:30:20.776+05:30 TRACE 5088 --- [nio-8080-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+	Hibernate:
+		update
+			users
+		set
+			address=?,
+			email=?,
+			first_name=?,
+			last_name=?,
+			phone_id=?
+		where
+			id=?
+	2023-04-20T16:30:20.784+05:30 TRACE 5088 --- [nio-8080-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [VARCHAR] - [ICC]
+	2023-04-20T16:30:20.784+05:30 TRACE 5088 --- [nio-8080-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter [2] as [VARCHAR] - [yuvraj@icc.com]
+	2023-04-20T16:30:20.784+05:30 TRACE 5088 --- [nio-8080-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter [3] as [VARCHAR] - [Yuvraj]
+	2023-04-20T16:30:20.784+05:30 TRACE 5088 --- [nio-8080-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter [4] as [VARCHAR] - [Anna Singh]
+	2023-04-20T16:30:20.784+05:30 TRACE 5088 --- [nio-8080-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter [5] as [INTEGER] - [1]
+	2023-04-20T16:30:20.784+05:30 TRACE 5088 --- [nio-8080-exec-4] org.hibernate.orm.jdbc.bind              : binding parameter [6] as [INTEGER] - [1]
+
+
+7. Delete user by id
+	Hibernate:
+		select
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			p1_0.id,
+			p1_0.phone_number,
+			p2_0.user_id,
+			p2_0.id,
+			p2_0.profile_type,
+			p2_0.permissions
+		from
+			users u1_0
+		left join
+			phone p1_0
+				on p1_0.id=u1_0.phone_id
+		left join
+			profiles p2_0
+				on u1_0.id=p2_0.user_id
+		where
+			u1_0.id=?
+	2023-04-20T16:31:09.073+05:30 TRACE 5088 --- [nio-8080-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+	Hibernate:
+		delete
+		from
+			profiles
+		where
+			id=?
+	2023-04-20T16:31:09.080+05:30 TRACE 5088 --- [nio-8080-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+	Hibernate:
+		delete
+		from
+			profiles
+		where
+			id=?
+	2023-04-20T16:31:09.083+05:30 TRACE 5088 --- [nio-8080-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [2]
+	Hibernate:
+		delete
+		from
+			users
+		where
+			id=?
+	2023-04-20T16:31:09.084+05:30 TRACE 5088 --- [nio-8080-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+	Hibernate:
+		delete
+		from
+			phone
+		where
+			id=?
+	2023-04-20T16:31:09.085+05:30 TRACE 5088 --- [nio-8080-exec-8] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
+
+
+8. Get all users pagination
+	Default pagination pageNo: 0
+	Default pagination pageSize: 2
+	Default pagination sortBy: email
+	Default pagination sortDir: asc
+	Hibernate:
+		select
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			u1_0.phone_id
+		from
+			users u1_0
+		order by
+			u1_0.email asc limit ?,
+			?
+	2023-04-20T16:30:47.717+05:30 TRACE 5088 --- [nio-8080-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [0]
+	2023-04-20T16:30:47.717+05:30 TRACE 5088 --- [nio-8080-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter [2] as [INTEGER] - [2]
+	Hibernate:
+		select
+			p1_0.id,
+			p1_0.phone_number,
+			u1_0.id,
+			u1_0.address,
+			u1_0.email,
+			u1_0.first_name,
+			u1_0.last_name,
+			p2_0.user_id,
+			p2_0.id,
+			p2_0.profile_type,
+			p2_0.permissions
+		from
+			phone p1_0
+		left join
+			users u1_0
+				on p1_0.id=u1_0.phone_id
+		left join
+			profiles p2_0
+				on u1_0.id=p2_0.user_id
+		where
+			p1_0.id=?
+	2023-04-20T16:30:47.718+05:30 TRACE 5088 --- [nio-8080-exec-7] org.hibernate.orm.jdbc.bind              : binding parameter [1] as [INTEGER] - [1]
